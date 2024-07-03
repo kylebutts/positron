@@ -152,12 +152,17 @@ export class PositronConsole {
 		return elements.map(e => e.textContent);
 	}
 
-	async waitForEndingConsoleText(text: string) {
+	/**
+	 * Waits for the console to show the given text.
+	 * @param text The text to wait for in the console.
+	 * @param substring If true, the text is considered a substring of the console text.
+	 */
+	async waitForEndingConsoleText(text: string, substring = false) {
 
 		let lastConsoleLine = await this.getConsoleContents(-1);
 
 		for (let i = 0; i < 30; i++) {
-			if (lastConsoleLine[0] === text) {
+			if (lastConsoleLine[0] === text || (substring && lastConsoleLine[0].includes(text))) {
 				break;
 			} else {
 				await this.code.wait(100);
